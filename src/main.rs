@@ -14,17 +14,19 @@ enum Archivo {
 
 struct Carpeta {
     nombre: String,
-    archivos: Vec<Archivo>,
-    subcarpetas: Vec<Carpeta>,
+    elementos: Vec<Box<dyn Elemento>>,
 }
 
 impl Carpeta {
     fn new(nombre: &str) -> Self {
         Self {
             nombre: nombre.to_string(),
-            archivos: Vec::new(),
-            subcarpetas: Vec::new(),
+            elementos: Vec::new(),
         }
+    }
+
+    fn agregar(&mut self, elemento: Box<dyn Elemento>) {
+        self.elementos.push(elemento);
     }
 }
 
@@ -44,11 +46,8 @@ impl Elemento for Archivo {
 impl Elemento for Carpeta {
     fn get_size(&self) -> i32 {
         let mut total = 0;
-        for archivo in &self.archivos {
+        for archivo in &self.elementos {
             total += archivo.get_size();
-        }
-        for subcarpeta in &self.subcarpetas {
-            total += subcarpeta.get_size()
         }
         total
     }
@@ -65,15 +64,15 @@ impl CorreoLegacy {
 
 fn agregar_archivo(carpeta: &mut Carpeta, tipo: &str, nombre: &str, tamanio: i32) {
     if tipo == "pdf" {
-        carpeta.archivos.push(Archivo::PDF(ArchivoBase {
+        carpeta.agregar(Box::new(Archivo::PDF(ArchivoBase {
             nombre: nombre.to_string(),
             tamanio,
-        }));
+        })));
     } else if tipo == "txt" {
-        carpeta.archivos.push(Archivo::Texto(ArchivoBase {
+        carpeta.agregar(Box::new(Archivo::Texto(ArchivoBase {
             nombre: nombre.to_string(),
             tamanio,
-        }));
+        })));
     }
 }
 
@@ -96,7 +95,7 @@ fn main() {
 
     let mut ejemplos = Carpeta::new("Ejemplos");
     agregar_archivo(&mut ejemplos, "txt", "ejemplo.txt", 50);
-    clase.subcarpetas.push(ejemplos);
+    clase.agregar(Box::new(ejemplos));
 
     println!("{}", obtener_tamanio(&clase));
     enviar_resultado(&clase, "profesor@universidad.edu");
@@ -139,7 +138,7 @@ mod tests {
 
         let mut ejemplos = Carpeta::new("Ejemplos");
         agregar_archivo(&mut ejemplos, "txt", "ejemplo.txt", 50);
-        clase.subcarpetas.push(ejemplos);
+        clase.agregar(Box::new(ejemplos));
 
         assert_eq!(obtener_tamanio(&clase), 250);
     }
