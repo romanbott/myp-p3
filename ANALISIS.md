@@ -6,3 +6,12 @@
   Para esto recorre recursivamente todos los archivos y carpetas, y dependiendo del tipo de archivo, suma el tamaño.
 
 3. El método enviarResultado se encarga de enviar el tamaño total de una carpeta por correo.
+
+
+## Problemas identificados
+
+- Varias funciones tienen que considerar cada caso de tipo de archivo
+- Demasiado acoplamiento entre la función `enviar_resultados` y la interfaz de `CorreoLegacy` 
+- Al manejar los archivos como un enum, hay poca extensibilidad si se quiere agregar nuevos tipos de archivo.
+
+
