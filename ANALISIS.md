@@ -22,3 +22,18 @@
 - Carpeta con pdf de 120 y texto de 80 -> tamaño 200
 - Ejemplo con subcarpeta de 50 y tamaño total 250
 - Carpeta con archivo de tamaño 0 -> tamaño 0
+
+
+## Plan para primera refactorizacion
+
+Usar el patrón _composite_ para tener una interfaz unificada para manejar archivos y carpetas.
+
+Usar un _trait_ para abstraer los elementos del sistema de archivos y usar _trait objects_ para los argumentos en las funciones.
+
+La función `obtener_tamanio` ahora es más natural que sea un método del _trait_.
+
+
+
+
+
+

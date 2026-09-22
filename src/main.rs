@@ -28,6 +28,32 @@ impl Carpeta {
     }
 }
 
+trait Elemento {
+    fn get_size(&self) -> i32;
+}
+
+impl Elemento for Archivo {
+    fn get_size(&self) -> i32 {
+        match self {
+            Archivo::PDF(archivo_base) => archivo_base.tamanio,
+            Archivo::Texto(archivo_base) => archivo_base.tamanio,
+        }
+    }
+}
+
+impl Elemento for Carpeta {
+    fn get_size(&self) -> i32 {
+        let mut total = 0;
+        for archivo in &self.archivos {
+            total += archivo.get_size();
+        }
+        for subcarpeta in &self.subcarpetas {
+            total += subcarpeta.get_size()
+        }
+        total
+    }
+}
+
 struct CorreoLegacy;
 
 impl CorreoLegacy {
@@ -51,18 +77,8 @@ fn agregar_archivo(carpeta: &mut Carpeta, tipo: &str, nombre: &str, tamanio: i32
     }
 }
 
-fn obtener_tamanio(carpeta: &Carpeta) -> i32 {
-    let mut total = 0;
-    for archivo in &carpeta.archivos {
-        total += match archivo {
-            Archivo::PDF(datos) => datos.tamanio,
-            Archivo::Texto(datos) => datos.tamanio,
-        };
-    }
-    for subcarpeta in &carpeta.subcarpetas {
-        total += obtener_tamanio(subcarpeta);
-    }
-    total
+fn obtener_tamanio(elemento: &dyn Elemento) -> i32 {
+    elemento.get_size()
 }
 
 fn enviar_resultado(carpeta: &Carpeta, destino: &str) {
