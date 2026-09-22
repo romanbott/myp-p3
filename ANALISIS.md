@@ -15,3 +15,10 @@
 - Al manejar los archivos como un enum, hay poca extensibilidad si se quiere agregar nuevos tipos de archivo.
 
 
+## Pruebas unitarias necesarias
+
+- Carpeta vacia -> tamaño cero
+- Carpeta con pdf de 120 -> tamaño 120
+- Carpeta con pdf de 120 y texto de 80 -> tamaño 200
+- Ejemplo con subcarpeta de 50 y tamaño total 250
+- Carpeta con archivo de tamaño 0 -> tamaño 0

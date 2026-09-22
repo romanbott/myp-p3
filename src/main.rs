@@ -85,3 +85,55 @@ fn main() {
     println!("{}", obtener_tamanio(&clase));
     enviar_resultado(&clase, "profesor@universidad.edu");
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn carpeta_vacia() {
+        let vacia = Carpeta::new("prueba");
+        assert_eq!(obtener_tamanio(&vacia), 0);
+    }
+
+    #[test]
+    fn carpeta_unico_pdf() {
+        let mut prueba = Carpeta::new("prueba");
+
+        agregar_archivo(&mut prueba, "pdf", "prueba.pdf", 120);
+
+        assert_eq!(obtener_tamanio(&prueba), 120);
+    }
+
+    #[test]
+    fn carpeta_pdf_y_texto() {
+        let mut prueba = Carpeta::new("prueba");
+
+        agregar_archivo(&mut prueba, "pdf", "prueba.pdf", 120);
+        agregar_archivo(&mut prueba, "txt", "prueba.txt", 80);
+
+        assert_eq!(obtener_tamanio(&prueba), 200);
+    }
+
+    #[test]
+    fn ejemplo_anidado() {
+        let mut clase = Carpeta::new("MyP");
+        agregar_archivo(&mut clase, "pdf", "practica.pdf", 120);
+        agregar_archivo(&mut clase, "txt", "notas.txt", 80);
+
+        let mut ejemplos = Carpeta::new("Ejemplos");
+        agregar_archivo(&mut ejemplos, "txt", "ejemplo.txt", 50);
+        clase.subcarpetas.push(ejemplos);
+
+        assert_eq!(obtener_tamanio(&clase), 250);
+    }
+
+    #[test]
+    fn carpeta_unico_vacio() {
+        let mut prueba = Carpeta::new("prueba");
+
+        agregar_archivo(&mut prueba, "pdf", "prueba.pdf", 0);
+
+        assert_eq!(obtener_tamanio(&prueba), 0);
+    }
+}
