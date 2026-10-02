@@ -40,3 +40,11 @@ Usar el patrón _factory method_ para abstraer la creación de archivos, de esta
 Definiremos una estructura `FabricaArchivos` que implementa un método `crear` a donde delegaremos la decisión de qué tipo de archivo crear.
 
 
+
+## Patrón _Adapter_
+
+Usar el patrón _adapter_ para cambiar la interfaz que se usa en `main` para enviar correos, conservando la interfaz que expone `CorreoLegacy`.
+
+Definiremos un nuevo trait `Notificador` para definir la interfaz buscada, y posteriormente basta encapsular un `CorreoLegacy` en una estructura `AdapatadorCorreo` que implementa `Notificador` e internamente usa `CorreoLegacy`.
+
+La función `enviar_resultado` ahora recibe un `Notificador` como parámetro adicional, y en `main` se crea una instancia de `AdaptadorCorreo`.

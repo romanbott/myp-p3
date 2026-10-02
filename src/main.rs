@@ -75,6 +75,18 @@ impl CorreoLegacy {
     }
 }
 
+trait Notificador {
+    fn enviar(&self, destino: &str, mensaje: &str);
+}
+
+struct AdaptadorCorreo(CorreoLegacy);
+
+impl Notificador for AdaptadorCorreo {
+    fn enviar(&self, destino: &str, mensaje: &str) {
+        self.0.send_email(destino, mensaje);
+    }
+}
+
 fn agregar_archivo(carpeta: &mut Carpeta, tipo: &str, nombre: &str, tamanio: i32) {
     let archivo = FabricaArchivos::crear(tipo, nombre.to_string(), tamanio);
 
@@ -85,15 +97,15 @@ fn obtener_tamanio(elemento: &dyn Elemento) -> i32 {
     elemento.get_size()
 }
 
-fn enviar_resultado(carpeta: &Carpeta, destino: &str) {
-    let correo = CorreoLegacy;
-    correo.send_email(
+fn enviar_resultado(carpeta: &Carpeta, destino: &str, notificador: &dyn Notificador) {
+    notificador.enviar(
         destino,
         &format!("Tamanio total: {}", obtener_tamanio(carpeta)),
     );
 }
 
 fn main() {
+    let notificador = AdaptadorCorreo(CorreoLegacy);
     let mut clase = Carpeta::new("MyP");
     agregar_archivo(&mut clase, "pdf", "practica.pdf", 120);
     agregar_archivo(&mut clase, "txt", "notas.txt", 80);
@@ -103,7 +115,7 @@ fn main() {
     clase.agregar(Box::new(ejemplos));
 
     println!("{}", obtener_tamanio(&clase));
-    enviar_resultado(&clase, "profesor@universidad.edu");
+    enviar_resultado(&clase, "profesor@universidad.edu", &notificador);
 }
 
 #[cfg(test)]
