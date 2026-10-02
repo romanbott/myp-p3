@@ -24,16 +24,19 @@
 - Carpeta con archivo de tamaño 0 -> tamaño 0
 
 
-## Plan para primera refactorizacion
+# Refactorización
 
+## Patrón _Composite_
 Usar el patrón _composite_ para tener una interfaz unificada para manejar archivos y carpetas.
 
 Usar un _trait_ para abstraer los elementos del sistema de archivos y usar _trait objects_ para los argumentos en las funciones.
 
 La función `obtener_tamanio` ahora es más natural que sea un método del _trait_.
 
+## Patrón _Factory Method_
 
+Usar el patrón _factory method_ para abstraer la creación de archivos, de esta forma desacoplando el manejo de casos para archivos pdf y txt.
 
-
+Definiremos una estructura `FabricaArchivos` que implementa un método `crear` a donde delegaremos la decisión de qué tipo de archivo crear.
 
 

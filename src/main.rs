@@ -12,6 +12,19 @@ enum Archivo {
     Texto(ArchivoBase),
 }
 
+struct FabricaArchivos;
+
+impl FabricaArchivos {
+    fn crear(tipo: &str, nombre: String, tamanio: i32) -> Archivo {
+        match tipo {
+            "pdf" => Archivo::PDF(ArchivoBase { nombre, tamanio }),
+            "txt" => Archivo::Texto(ArchivoBase { nombre, tamanio }),
+
+            _ => unimplemented!("Tipo de archivo no soportado."),
+        }
+    }
+}
+
 struct Carpeta {
     nombre: String,
     elementos: Vec<Box<dyn Elemento>>,
@@ -63,17 +76,9 @@ impl CorreoLegacy {
 }
 
 fn agregar_archivo(carpeta: &mut Carpeta, tipo: &str, nombre: &str, tamanio: i32) {
-    if tipo == "pdf" {
-        carpeta.agregar(Box::new(Archivo::PDF(ArchivoBase {
-            nombre: nombre.to_string(),
-            tamanio,
-        })));
-    } else if tipo == "txt" {
-        carpeta.agregar(Box::new(Archivo::Texto(ArchivoBase {
-            nombre: nombre.to_string(),
-            tamanio,
-        })));
-    }
+    let archivo = FabricaArchivos::crear(tipo, nombre.to_string(), tamanio);
+
+    carpeta.agregar(Box::new(archivo));
 }
 
 fn obtener_tamanio(elemento: &dyn Elemento) -> i32 {
